@@ -545,6 +545,7 @@ async function enviarDatosMinisterio() {///
 
         for (let idArea in paquetesPorArea) {
             let bodyMinisterio = {
+                id_hospital: 13
                 id_area: parseInt(idArea),
                 fecha: hoy,
                 datos: paquetesPorArea[idArea]
