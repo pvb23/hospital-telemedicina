@@ -508,6 +508,9 @@ async function enviarDatosMinisterio() {///
         let resReservas = await fetch("/api/reservas?token=" + tokenGlobal);
         let reservas = await resReservas.json();
 
+        let resRec = await fetch("/api/recursos");
+        let listaRecursos = await resRec.json();
+
         let paquetesPorArea = {};
 
         for (let i = 0; i < reservas.length; i++) {
@@ -545,7 +548,7 @@ async function enviarDatosMinisterio() {///
 
         for (let idArea in paquetesPorArea) {
             let bodyMinisterio = {
-                id_hospital: 13
+                id_hospital: 13,
                 id_area: parseInt(idArea),
                 fecha: hoy,
                 datos: paquetesPorArea[idArea]
