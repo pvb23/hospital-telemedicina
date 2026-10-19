@@ -507,7 +507,7 @@ async function enviarDatosMinisterio() {
         let resReservas = await fetch("/api/reservas?token=" + tokenGlobal);
         let reservas = await resReservas.json();
 
-        let resRec = await fetch("/api/recursos");
+        let resRec = await fetch("/api/recursos?token=" + tokenGlobal);
         let listaRecursos = await resRec.json();
 
         let todosLosRegistros = [];
@@ -524,7 +524,7 @@ async function enviarDatosMinisterio() {
             let nombreSanitario = "Desconocido";
             let apellidosSanitario = "Desconocido";
             try {
-                let resSanitario = await fetch("/api/sanitarios/" + r.sanitario);
+                let resSanitario = await fetch("/api/sanitarios/" + r.sanitario + "?token=" + tokenGlobal);
                 if(resSanitario.ok){
                     let sanitarioDB = await resSanitario.json();
                     nombreSanitario = sanitarioDB.nombre;
@@ -572,7 +572,7 @@ async function enviarDatosMinisterio() {
 
     } catch (error) {
         console.error("Error al enviar al ministerio:", error);
-        alert("Hubo un error de conexión al enviar los datos.");
+        alert("Hubo un error al enviar los datos.");
     }
 }
         
