@@ -510,7 +510,7 @@ async function enviarDatosMinisterio() {
         let resRec = await fetch("/api/recursos");
         let listaRecursos = await resRec.json();
 
-        let paquetesPorArea = {};
+        let todosLosRegistros = [];
 
         for (let i = 0; i < reservas.length; i++) {
             let r = reservas[i];
@@ -520,8 +520,6 @@ async function enviarDatosMinisterio() {
             
             let modelo = listaModelos.find(m => m.id == recurso.modelo);
             let categoria = listaCategorias.find(c => c.id == modelo.categoria);
-            
-            let idArea = categoria ? categoria.id : 1; 
 
             let nombreSanitario = "Desconocido";
             let apellidosSanitario = "Desconocido";
@@ -539,7 +537,7 @@ async function enviarDatosMinisterio() {
             let fFin = r.fecha_fin ? r.fecha_fin.split('T')[0] : "";
 
             let registroSanitario = {
-                nombre: nombreSanitario, 
+                nombre: nombreSanitario,
                 apellidos: apellidosSanitario,
                 categoría: categoria ? categoria.nombre : "General",
                 horas_estimadas: r.horas_estimadas,
@@ -548,39 +546,36 @@ async function enviarDatosMinisterio() {
                 fecha_fin: fFin
             };
 
-            if (!paquetesPorArea[idArea]) {
-                paquetesPorArea[idArea] = [];
-            }
-            paquetesPorArea[idArea].push(registroSanitario);
+            todosLosRegistros.push(registroSanitario);
         }
         
         let hoy = new Date().toISOString().split('T')[0]; 
-        let enviosExitosos = 0;
-
-        for (let idArea in paquetesPorArea) {
-            let bodyMinisterio = {
-                id_area: parseInt(idArea),
-                fecha: hoy,
-                datos: paquetesPorArea[idArea]
-            };
-            
-            let respuestaMin = await fetch("https://undefined.ua.es/telemedicina/api/datos", {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bodyMinisterio)
-            });
-            
-            if (respuestaMin.ok) {
-                enviosExitosos++;
-            }
+        
+        let bodyMinisterio = {
+            id_area: 13,
+            fecha: hoy,
+            datos: todosLosRegistros
+        };
+        
+        let respuestaMin = await fetch("https://undefined.ua.es/telemedicina/api/datos", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bodyMinisterio)
+        });
+        
+        if (respuestaMin.ok) {
+            alert("Se han enviado los datos al Ministerio con éxito (Área 13).");
+            cargarRankingMinisterio();
+        } else {
+            alert("Error al enviar los datos. El servidor del profesor rechazó la petición.");
         }
-        alert("Se han enviado " + enviosExitosos + " paquetes de datos al Ministerio con éxito.");
-        cargarRankingMinisterio();
 
     } catch (error) {
         console.error("Error al enviar al ministerio:", error);
-        alert("Hubo un error al enviar los datos.");
+        alert("Hubo un error de conexión al enviar los datos.");
     }
 }
+        
+
 
 cambiarseccion("inicio");
