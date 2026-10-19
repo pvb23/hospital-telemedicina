@@ -520,7 +520,6 @@ async function enviarDatosMinisterio() {
             
             let modelo = listaModelos.find(m => m.id == recurso.modelo);
             
-            // LA LÍNEA MÁGICA: Si el recurso tiene un modelo borrado o que no existe, lo saltamos para que no se rompa
             if(!modelo) continue; 
 
             let categoria = listaCategorias.find(c => c.id == modelo.categoria);
@@ -556,7 +555,7 @@ async function enviarDatosMinisterio() {
         let hoy = new Date().toISOString().split('T')[0]; 
         
         let bodyMinisterio = {
-            id_area: 13,
+            id_area: 12,
             fecha: hoy,
             datos: todosLosRegistros
         };
