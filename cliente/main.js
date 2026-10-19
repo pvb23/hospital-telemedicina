@@ -519,6 +519,10 @@ async function enviarDatosMinisterio() {
             if(!recurso) continue;
             
             let modelo = listaModelos.find(m => m.id == recurso.modelo);
+            
+            // LA LÍNEA MÁGICA: Si el recurso tiene un modelo borrado o que no existe, lo saltamos para que no se rompa
+            if(!modelo) continue; 
+
             let categoria = listaCategorias.find(c => c.id == modelo.categoria);
 
             let nombreSanitario = "Desconocido";
