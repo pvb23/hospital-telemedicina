@@ -296,7 +296,6 @@ function guardarrecurso(){//WS//
                                " CON CÓDIGO " + nserie
                     }));
                 }
-
                 buscarrecursos();
                 cambiarseccion("aplicacion");
             }else{
@@ -497,12 +496,11 @@ async function cargarRankingMinisterio() {///
     }
 }
 
-async function enviarDatosMinisterio() {
+async function enviarDatosMinisterio() {///en las url añadir el token del gestor actual para que el servidor lo valide y no se pueda enviar datos sin estar logueado
     if (!gestoractual) {
         alert("Debes iniciar sesión para enviar datos.");
         return;
     }
-
     try {
         let resReservas = await fetch("/api/reservas?token=" + tokenGlobal);
         let reservas = await resReservas.json();
@@ -520,7 +518,6 @@ async function enviarDatosMinisterio() {
             
             let modelo = listaModelos.find(m => m.id == recurso.modelo);
             
-            // LA LÍNEA MÁGICA: Si el recurso tiene un modelo borrado o que no existe, lo saltamos para que no se rompa
             if(!modelo) continue; 
 
             let categoria = listaCategorias.find(c => c.id == modelo.categoria);
@@ -556,7 +553,7 @@ async function enviarDatosMinisterio() {
         let hoy = new Date().toISOString().split('T')[0]; 
         
         let bodyMinisterio = {
-            id_area: 13, // Si cambias esto a 12...
+            id_area: 13, 
             fecha: hoy,
             datos: todosLosRegistros
         };
@@ -568,7 +565,6 @@ async function enviarDatosMinisterio() {
         });
         
         if (respuestaMin.ok) {
-            // ...AQUÍ SE CAMBIARÁ AUTOMÁTICAMENTE Y PONDRÁ "(Área 12)"
             alert("Se han enviado los datos al Ministerio con éxito (Área " + bodyMinisterio.id_area + ").");
             cargarRankingMinisterio();
         } else {
