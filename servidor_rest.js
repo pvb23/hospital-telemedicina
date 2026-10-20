@@ -61,27 +61,32 @@ module.exports = function(app) {
         });
     });
 
-    app.use("/api", function (req, res, next) {///
-    var token = req.query.token; 
-    
-    if (!token) {
-        return res.status(401).json("Acceso denegado. No se ha proporcionado un token.");
-    }
+    app.use("/api", function (req, res, next) {
+        var token = req.query.token; 
+        
+        if (Array.isArray(token)) {
+            token = token[0];  
+        }
+        // -------------------------------------------------------
+        
+        if (!token) {
+            return res.status(401).json("Acceso denegado. No se ha proporcionado un token.");
+        }
 
-    var contenidoToken;
-    try {
-        var tokenLimpio = String(token).trim();
-        contenidoToken = jwt.decode(tokenLimpio, clave); 
-    } catch (error) {
-        return res.status(401).json("Error: " + error.message + " | Recibí esto: " + tokenLimpio);
-    }
+        var contenidoToken;
+        try {
+            var tokenLimpio = String(token).trim();
+            contenidoToken = jwt.decode(tokenLimpio, clave); 
+        } catch (error) {
+            return res.status(401).json("Error: " + error.message + " | Recibí esto: " + tokenLimpio);
+        }
 
-    if (contenidoToken.expira < Date.now()) {
-        return res.status(401).json("El token ha expirado. Inicia sesión de nuevo.");
-    }
-    
-    next(); 
-});
+        if (contenidoToken.expira < Date.now()) {
+            return res.status(401).json("El token ha expirado. Inicia sesión de nuevo.");
+        }
+        
+        next(); 
+    });
 
     app.put("/api/gestores/:id",function(req,res){
         var id = parseInt(req.params.id)
