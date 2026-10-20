@@ -36,7 +36,7 @@ function entrar(){ //
     rest.post("/api/gestores/login", {usuario: u, contrasena: p}, function(estado, respuesta){
         if(estado == 200){
             gestoractual = respuesta.gestor;
-            tokenGlobal = respuesta.token;
+            tokenGlobal = encodeURIComponent(respuesta.token);
 
             document.getElementById("nombre-gestor-bienvenida").innerHTML = gestoractual.nombre + " " + gestoractual.apellido;
             cargardesplegables();          
