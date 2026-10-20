@@ -19,7 +19,7 @@ module.exports = function(app) {
         conexion.query(sql, function (err, resultados) {///
             if (err) return res.status(500).json("Error en la base de datos");
             
-            if (resultados.length > 0) {
+            if (resultados.length > 0) {//
                 var contenido = {
                     usuario: resultados[0].id,
                     expira: Date.now() + (2 * 60 * 60 * 1000) 
@@ -62,23 +62,25 @@ module.exports = function(app) {
     });
 
     app.use("/api", function (req, res, next) {///
-        var token = req.query.token; 
-        
-        if (!token) {
-            return res.status(401).json("Acceso denegado. No se ha proporcionado un token.");
-        }
-        try {
-            var contenidoToken = jwt.decode(token, clave); 
-            
-            if (contenidoToken.expira < Date.now()) {
-                return res.status(401).json("El token ha expirado. Inicia sesión de nuevo.");
-            }
-            next(); 
-            
-        } catch (error) {
-            return res.status(401).json("El token es incorrecto o ha sido manipulado.");
-        }
-    });
+    var token = req.query.token; 
+    
+    if (!token) {
+        return res.status(401).json("Acceso denegado. No se ha proporcionado un token.");
+    }
+
+    var contenidoToken;
+    try {
+        contenidoToken = jwt.decode(token.trim(), clave); 
+    } catch (error) {
+        return res.status(401).json("Error real del token: " + error.message);
+    }
+
+    if (contenidoToken.expira < Date.now()) {
+        return res.status(401).json("El token ha expirado. Inicia sesión de nuevo.");
+    }
+    
+    next(); 
+});
 
     app.put("/api/gestores/:id",function(req,res){
         var id = parseInt(req.params.id)
