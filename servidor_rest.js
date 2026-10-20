@@ -70,7 +70,8 @@ module.exports = function(app) {
 
     var contenidoToken;
     try {
-        contenidoToken = jwt.decode(token.trim(), clave); 
+        var tokenLimpio = String(token).trim();
+        contenidoToken = jwt.decode(tokenLimpio, clave); 
     } catch (error) {
         return res.status(401).json("Error real del token: " + error.message);
     }
