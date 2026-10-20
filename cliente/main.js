@@ -9,6 +9,8 @@ var idrecursoactual=null;
 
 var conexionWS = null;
 
+var tokenGlobal = null;//
+
 const mapaAreas = {//
     1: "Alergología", 2: "Anestesiología", 3: "Cardiología", 4: "Cirugía General",
     5: "Dermatología", 6: "Aparato Digestivo", 7: "Endocrinología", 8: "Ginecología",
