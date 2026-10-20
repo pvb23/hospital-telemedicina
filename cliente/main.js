@@ -102,7 +102,7 @@ function editardatosusuario(){
         nombre: document.getElementById("editar-nombre").value,
         apellido: document.getElementById("editar-apellido").value
     }
-    rest.put("/api/gestores/" + gestoractual.id , g, function(estado,respuesta){
+    rest.put("/api/gestores/" + gestoractual.id + "?token=" + tokenGlobal, g, function(estado,respuesta){
         if(estado==200){
             gestoractual=respuesta
             document.getElementById("nombre-gestor-bienvenida").innerHTML= respuesta.nombre + " " + respuesta.apellido;
@@ -115,7 +115,7 @@ function editardatosusuario(){
 
 
 function cargardesplegables(){
-    rest.get("/api/categorias",function(estado,respuesta){
+    rest.get("/api/categorias?token=" + tokenGlobal,function(estado,respuesta){
         if(estado==200){
             listaCategorias=respuesta;
             var select=document.getElementById("categoria")
@@ -129,7 +129,7 @@ function cargardesplegables(){
         }
         
     })
-    rest.get("/api/modelos",function(estado,respuesta){
+    rest.get("/api/modelos?token=" + tokenGlobal,function(estado,respuesta){
         if(estado==200){
             listaModelos=respuesta;
             var select=document.getElementById("modelo")
@@ -142,7 +142,7 @@ function cargardesplegables(){
             }
         }
     })
-    rest.get("/api/ubicaciones",function(estado,respuesta){
+    rest.get("/api/ubicaciones?token=" + tokenGlobal,function(estado,respuesta){
         if(estado==200){
             listaUbicaciones=respuesta;
             var select=document.getElementById("ubicacion")
@@ -170,7 +170,7 @@ function buscarrecursos(){
     if(ubicacion!="") url += "ubicacion=" + ubicacion + "&";
     if(estado!="") url += "estado=" + estado + "&";
 
-    rest.get(url,function(estado,respuesta){
+    rest.get(url + "token=" + tokenGlobal, function(estado,respuesta){
         if(estado==200){
             var tabla=document.getElementById("cuerpo-tabla")
             tabla.innerHTML=""
@@ -224,7 +224,7 @@ function buscarrecursos(){
 
 function borrarrecurso(id){
     if(confirm("¿Está seguro de que desea borrar este recurso?")){
-        rest.delete("/api/recursos/" + id, function(estado,respuesta){
+        rest.delete("/api/recursos/" + id + "?token=" + tokenGlobal, function(estado,respuesta){
             if(estado==200){
                 buscarrecursos();
             }else{
@@ -236,7 +236,7 @@ function borrarrecurso(id){
 
 function abrirrecurso(id){
     idrecursoactual=id;
-    rest.get ("/api/recursos/"+id,function(estado,respuesta){
+    rest.get ("/api/recursos/"+id+"?token=" + tokenGlobal,function(estado,respuesta){
         if(estado==200){
             document.getElementById("nserie-ficha").value=respuesta.numero_serie
             document.getElementById("ubicacion-ficha").value = respuesta.ubicacion;
@@ -280,7 +280,7 @@ function guardarrecurso(){//WS//
     }
 
     if(idrecursoactual==null){
-        rest.post("/api/recursos",nuevo,function(estado,respuesta){
+        rest.post("/api/recursos?token=" + tokenGlobal,nuevo,function(estado,respuesta){
             if(estado==201){
                 
                 if (conexionWS) {
@@ -303,7 +303,7 @@ function guardarrecurso(){//WS//
             }
         })
     }else{
-        rest.put("/api/recursos/" + idrecursoactual, nuevo, function(estado,respuesta){
+        rest.put("/api/recursos/" + idrecursoactual + "?token=" + tokenGlobal, nuevo, function(estado,respuesta){
             if(estado==200){
                 buscarrecursos();
                 cambiarseccion("aplicacion");
@@ -344,14 +344,14 @@ function filtrarModelosFicha() {
 
 
 function cargarreservas(){  
-    rest.get("/api/recursos/" + idrecursoactual + "/reservas", function(estado,respuesta){
+    rest.get("/api/recursos/" + idrecursoactual + "/reservas?token=" + tokenGlobal, function(estado,respuesta){
         if(estado==200){
             var tabla=document.getElementById("cuerpo-tabla-reservas")
             tabla.innerHTML=""
             for(var i=0; i<respuesta.length; i++){
                 var reserva=respuesta[i]
 
-                rest.get("/api/sanitarios/" + reserva.sanitario, (function(reservaActual){
+                rest.get("/api/sanitarios/" + reserva.sanitario + "?token=" + tokenGlobal, (function(reservaActual){
                     return function(estado2,respuesta2){
                         var nombreSanitario = "";
                         if(estado2==200){
@@ -393,14 +393,14 @@ function cargarreservas(){
 }
                    
 function cargarresenyas(){  
-    rest.get("/api/recursos/"+ idrecursoactual + "/resenyas", function(estado,respuesta){
+    rest.get("/api/recursos/"+ idrecursoactual + "/resenyas?token=" + tokenGlobal, function(estado,respuesta){
         if(estado==200){
             var tabla=document.getElementById("cuerpo-tabla-resenas")
             tabla.innerHTML=""
             for(var i=0; i<respuesta.length; i++){
                 var resenya=respuesta[i]
                 
-                rest.get("/api/sanitarios/" + resenya.sanitario, (function(resenyaActual){
+                rest.get("/api/sanitarios/" + resenya.sanitario + "?token=" + tokenGlobal, (function(resenyaActual){
                     return function(estado2,respuesta2){
                         var nombreSanitario = "";
                         if(estado2==200){
@@ -496,7 +496,7 @@ async function cargarRankingMinisterio() {///
     }
 }
 
-async function enviarDatosMinisterio() {///en las url añadir el token del gestor actual para que el servidor lo valide y no se pueda enviar datos sin estar logueado
+async function enviarDatosMinisterio() {
     if (!gestoractual) {
         alert("Debes iniciar sesión para enviar datos.");
         return;
