@@ -73,7 +73,7 @@ module.exports = function(app) {
         var tokenLimpio = String(token).trim();
         contenidoToken = jwt.decode(tokenLimpio, clave); 
     } catch (error) {
-        return res.status(401).json("Error real del token: " + error.message);
+        return res.status(401).json("Error: " + error.message + " | Recibí esto: " + tokenLimpio);
     }
 
     if (contenidoToken.expira < Date.now()) {
