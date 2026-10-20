@@ -67,7 +67,6 @@ module.exports = function(app) {
         if (Array.isArray(token)) {
             token = token[0];  
         }
-        // -------------------------------------------------------
         
         if (!token) {
             return res.status(401).json("Acceso denegado. No se ha proporcionado un token.");
