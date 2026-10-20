@@ -118,6 +118,7 @@ function editardatosusuario(){
 
 function cargardesplegables(){
     rest.get("/api/categorias?token=" + tokenGlobal,function(estado,respuesta){
+        console.log("Chivato Categorías -> Estado:", estado, "Respuesta:", respuesta);
         if(estado==200){
             listaCategorias=respuesta;
             var select=document.getElementById("categoria")
