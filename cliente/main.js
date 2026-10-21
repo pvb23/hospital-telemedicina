@@ -579,6 +579,49 @@ async function enviarDatosMinisterio() {
         alert("Hubo un error al enviar los datos.");
     }
 }
+
+async function cargarrreservasfinalizadas(){
+    idarea=13
+    const respuesta = await fetch("https://undefined.ua.es/telemedicina/api/datos");
+    const datosMinisterio = await respuesta.json();
+
+    let conteoreservasfinalizadas = 0;
+    
+    for (let i = 0; i < datosMinisterio.length; i++) {
+        let registro = datosMinisterio[i];
+        if (registro.id_area == idarea && registro.datos) {
+            for (let j = 0; j < registro.datos.length; j++) {
+                let reserva = registro.datos[j];
+                if (reserva.fecha_fin) {
+                    conteoreservasfinalizadas++;
+                }
+            }
+        } 
+    }
+    return  alert("El número de reservas finalizadas para el área " + idarea + " es: " + conteoreservasfinalizadas);
+}   
+
+async function numeroregistrosporarea(){
+    const respuesta = await fetch("https://undefined.ua.es/telemedicina/api/datos");
+    const datosMinisterio = await respuesta.json();
+    let idarea = document.getElementById("id_area").value;
+    let conteoregistros = 0;
+
+    for (let i = 0; i < datosMinisterio.length; i++) {
+        let registro = datosMinisterio[i];
+        if (registro.id_area == idarea && registro.datos) {
+            conteoregistros += registro.datos.length;
+        }
+    }
+    return alert("El número de registros para el área " + idarea + " es: " + conteoregistros);
+}
+
+
+
+
+           
+
+
         
 
 
