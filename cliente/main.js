@@ -592,7 +592,7 @@ async function cargarrreservasfinalizadas(){
         if (registro.id_area == idarea && registro.datos) {
             for (let j = 0; j < registro.datos.length; j++) {
                 let reserva = registro.datos[j];
-                if (reserva.fecha_fin!=null) {
+                if (reserva.fecha_fin === null) {
                     conteoreservasfinalizadas++;
                 }
             }
